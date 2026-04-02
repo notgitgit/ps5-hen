@@ -140,7 +140,7 @@ static inline uint64_t find_pml4e(uint64_t pmap, uint64_t va, uint64_t *out) {
     if (!pm_pml4) return ~0ULL;
     uint64_t addr = pm_pml4 + (((va >> 39) & 0x1FF) * 8);
     kernel_copyout(addr, out, 8);
-    std::print("pm_pml4 : {:016x} Level 0 Add: {:016x} - Value: {:016x}\n", pm_pml4, addr, *out);
+    //std::print("pm_pml4 : {:016x} Level 0 Add: {:016x} - Value: {:016x}\n", pm_pml4, addr, *out);
     return addr;
 }
 static inline uint64_t find_pdpe(uint64_t pmap, uint64_t va, uint64_t *out) {
@@ -148,7 +148,7 @@ static inline uint64_t find_pdpe(uint64_t pmap, uint64_t va, uint64_t *out) {
     if (find_pml4e(pmap, va, &pml4e) == ~0ULL) return ~0ULL;
     uint64_t addr = get_dmap_addr(PDE_ADDR(pml4e)) + (((va >> 30) & 0x1FF) * 8);
     kernel_copyout(addr, out, 8);
-    std::print("Level 1: {:016x} - Value: {:016x}\n", addr, *out);
+    //std::print("Level 1: {:016x} - Value: {:016x}\n", addr, *out);
     return addr;
 }
 static inline uint64_t find_pde(uint64_t pmap, uint64_t va, uint64_t *out) {
@@ -156,7 +156,7 @@ static inline uint64_t find_pde(uint64_t pmap, uint64_t va, uint64_t *out) {
     if (find_pdpe(pmap, va, &pdpe) == ~0ULL) return ~0ULL;
     uint64_t addr = get_dmap_addr(PDE_ADDR(pdpe)) + (((va >> 21) & 0x1FF) * 8);
     kernel_copyout(addr, out, 8);
-    std::print("Level 2: {:016x} - Value: {:016x}\n", addr, *out);
+    //std::print("Level 2: {:016x} - Value: {:016x}\n", addr, *out);
     return addr;
 }
 static inline uint64_t find_pte(uint64_t pmap, uint64_t va, uint64_t *out) {
@@ -166,6 +166,6 @@ static inline uint64_t find_pte(uint64_t pmap, uint64_t va, uint64_t *out) {
     if (pde & PDE_PS_MASK) return ~0ULL;
     uint64_t addr = get_dmap_addr(PDE_ADDR(pde)) + (((va >> 12) & 0x1FF) * 8);
     kernel_copyout(addr, out, 8);
-    std::print("Level 3: {:016x} - Value: {:016x}\n", addr, *out);
+    //std::print("Level 3: {:016x} - Value: {:016x}\n", addr, *out);
     return addr;
 }
