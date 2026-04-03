@@ -130,7 +130,7 @@ int stage2_find_vmcbs(hv_defeat_ctx *ctx) {
     uint64_t vcpu_off = fw_off(ctx->fw, "HV_VCPU");
     uint64_t stride   = fw_off(ctx->fw, "HV_VCPU_CPUID");
     // Testing direct VMCB on 04.03
-    if ((!vcpu_off || !stride) && ctx->fw != 0x0403) {
+    if ((!vcpu_off || !stride) && ctx->fw < 0x0300) {
         std::print("  missing HV_VCPU offsets for fw 0x{:04x}\n", ctx->fw);
         return -1;
     }
