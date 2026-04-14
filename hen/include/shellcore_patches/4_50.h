@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 
-struct patch g_shellcore_patches_450[] = {
+struct patch g_shellcore_patches_450_retail[] = {
     { 0x97595E, "\x52\xEB\x08", 3 },
     { 0x975969, "\xE8\xD2\xFB\xFF\xFF\x58\xC3", 7 },
     { 0x975531, "\x31\xC0\x50\xEB\xE3", 5 },
@@ -28,4 +28,10 @@ struct patch g_shellcore_patches_450[] = {
     { /* PS4 PKG Installer Patch 4 */ 0x533137, "\xEB", 1 },
     { /* PS5 PKG Installer Patch 4 */ 0x53324C, "\xEB", 1 },
     { /* PKG Installer Patch */ 0x535160, "\x48\x31\xC0\xC3", 4 },
+};
+
+struct patch g_shellcore_patches_450_devkit[] = {
+};
+
+struct patch g_shellcore_patches_450_testkit[] = {
 };

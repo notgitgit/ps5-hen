@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 
-struct patch g_shellcore_patches_300[] = {
+struct patch g_shellcore_patches_300_retail[] = {
     { 0x9D1CAE, "\x52\xEB\x08", 3 },
     { 0x9D1CB9, "\xE8\x02\xFC\xFF\xFF\x58\xC3", 7 },
     { 0x9D18B1, "\x31\xC0\x50\xEB\xE3", 5 },
@@ -29,4 +29,22 @@ struct patch g_shellcore_patches_300[] = {
     { /* PS4 PKG Installer Patch 4 */ 0x4DEF37, "\xEB", 1 },
     { /* PS5 PKG Installer Patch 4 */ 0x4DF04C, "\xEB", 1 },
     { /* PKG Installer Patch */ 0x4E0F10, "\x48\x31\xC0\xC3", 4 },
+};
+
+struct patch g_shellcore_patches_300_devkit[] = {
+};
+
+struct patch g_shellcore_patches_300_testkit[] = {
+    { /* disable game error message */ 0x8A3466, "\x90\x90\x90\x90\x90", 5},
+    { /* PS4 Disc Installer Patch 1 */ 0x25C3EB, "\x90\xE9", 2},
+    { /* PS5 Disc Installer Patch 1 */ 0x25C468, "\x90\xE9", 2},
+    { /* PS4 PKG Installer Patch 1 */ 0x25C56B, "\xEB", 1},
+    { /* PS5 PKG Installer Patch 1 */ 0x25C63F, "\xEB", 1},
+    { /* PS4 PKG Installer Patch 2 */ 0x25CAD5, "\x90\xE9", 2},
+    { /* PS5 PKG Installer Patch 2 */ 0x25CCC0, "\xeb", 1},
+    { /* PS4 PKG Installer Patch 3 */ 0x25D085, "\x90\xE9", 2},
+    { /* PS5 PKG Installer Patch 3 */ 0x25D122, "\x90\xE9", 2},
+    { /* PS4 PKG Installer Patch 4 */ 0x4E6207, "\xEB", 1},
+    { /* PS5 PKG Installer Patch 4 */ 0x4E631C, "\xEB", 1},
+    { /* PKG Installer */ 0x4E7C10, "\x48\x31\xC0\xC3", 4},
 };

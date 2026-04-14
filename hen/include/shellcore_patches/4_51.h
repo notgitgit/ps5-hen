@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 
-struct patch g_shellcore_patches_451[] = {
+struct patch g_shellcore_patches_451_retail[] = {
     { 0x97596E, "\x52\xEB\x08", 3 },
     { 0x975979, "\xE8\xD2\xFB\xFF\xFF\x58\xC3", 7 },
     { 0x975541, "\x31\xC0\x50\xEB\xE3", 5 },
@@ -29,4 +29,34 @@ struct patch g_shellcore_patches_451[] = {
     { /* PS4 PKG Installer Patch 4 */ 0x533147, "\xEB", 1 },
     { /* PS5 PKG Installer Patch 4 */ 0x53325C, "\xEB", 1 },
     { /* PKG Installer Patch */ 0x535170, "\x48\x31\xC0\xC3", 4 },
+};
+
+struct patch g_shellcore_patches_451_devkit[] = {
+    { /* disable game error message */ 0x828936, "\x90\x90\x90\x90\x90", 5 },
+    { /* PS4 Disc Installer Patch 1 */ 0x272A4B, "\x90\xE9", 2 },
+    { /* PS5 Disc Installer Patch 1 */ 0x272AE2, "\x90\xE9", 2 },
+    { /* PS4 PKG Installer Patch 1 */ 0x272BFB, "\xEB", 1 },
+    { /* PS5 PKG Installer Patch 1 */ 0x272CCF, "\xEB", 1 },
+    { /* PS4 PKG Installer Patch 2 */ 0x273138, "\x90\xE9", 2 },
+    { /* PS5 PKG Installer Patch 2 */ 0x273309, "\xEB", 1 },
+    { /* PS4 PKG Installer Patch 3 */ 0x2736D5, "\x90\xE9", 2 },
+    { /* PS5 PKG Installer Patch 3 */ 0x273772, "\x90\xE9", 2 },
+    { /* PS4 PKG Installer Patch 4 */ 0x53BE67, "\xEB", 1 },
+    { /* PS5 PKG Installer Patch 4 */ 0x53BF7C, "\xEB", 1 },
+    { /* PKG Installer */ 0x53D8C0, "\x48\x31\xC0\xC3", 4 },
+};
+
+struct patch g_shellcore_patches_451_testkit[] = {
+    { /* disable game error message */ 0x8287C6, "\x90\x90\x90\x90\x90", 5 },
+    { /* PS4 Disc Installer Patch 1 */ 0x2724DB, "\x90\xE9", 2 },
+    { /* PS5 Disc Installer Patch 1 */ 0x272572, "\x90\xE9", 2 },
+    { /* PS4 PKG Installer Patch 1 */ 0x27268B, "\xEB", 1 },
+    { /* PS5 PKG Installer Patch 1 */ 0x27275F, "\xEB", 1 },
+    { /* PS4 PKG Installer Patch 2 */ 0x272BC8, "\x90\xE9", 2 },
+    { /* PS5 PKG Installer Patch 2 */ 0x272D99, "\xEB", 1 },
+    { /* PS4 PKG Installer Patch 3 */ 0x273165, "\x90\xE9", 2 },
+    { /* PS5 PKG Installer Patch 3 */ 0x273202, "\x90\xE9", 2 },
+    { /* PS4 PKG Installer Patch 4 */ 0x53BCF7, "\xEB", 1 },
+    { /* PS5 PKG Installer Patch 4 */ 0x53BE0C, "\xEB", 1 },
+    { /* PKG Installer */ 0x53D750, "\x48\x31\xC0\xC3", 4 },
 };
